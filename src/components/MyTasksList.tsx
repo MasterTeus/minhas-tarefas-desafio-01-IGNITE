@@ -34,25 +34,24 @@ export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
       renderItem={({ item, index }) => {
         return (
           <TouchableOpacity
-            style={styles.taskButton}
+            style={item.done ? styles.taskButtonDone : styles.taskButton}
             testID={`button-${index}`}
             activeOpacity={0.7}
-            //TODO - use onPress, onLongPress and style props
+            onPress={() => onPress(item.id)}
+            onLongPress={() => onLongPress(item.id)}
           >
             <View
               testID={`marker-${index}`}
-              //TODO - use style prop
+              style={item.done ? styles.taskMarkerDone : styles.taskMarker}
             />
-            <Text
-              style={styles.taskText}
-              //TODO - use style prop
-            >
+            <Text style={item.done ? styles.taskTextDone : styles.taskText}>
               {item.title}
             </Text>
           </TouchableOpacity>
         );
       }}
       ListHeaderComponent={<FlatListHeaderComponent />}
+      ListFooterComponent={<View style={styles.footerComponent} />}
       ListHeaderComponentStyle={{
         marginBottom: 20,
       }}
@@ -86,20 +85,21 @@ const styles = StyleSheet.create({
     width: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#3D3D4D",
+    borderColor: "#764edd",
     marginRight: 10,
   },
   taskText: {
     color: "#764edd",
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   taskButtonDone: {
     flex: 1,
     paddingHorizontal: 10,
+    height: 50,
     paddingVertical: 12,
     marginBottom: 4,
     borderRadius: 4,
-    backgroundColor: "rgba(25, 61, 223, 0.1)",
+    backgroundColor: "rgba(48, 187, 157, 0.109)",
     flexDirection: "row",
     alignItems: "center",
   },
@@ -107,11 +107,15 @@ const styles = StyleSheet.create({
     height: 16,
     width: 16,
     borderRadius: 8,
-    backgroundColor: "#273FAD",
+    backgroundColor: "#17c05b",
     marginRight: 10,
   },
   taskTextDone: {
-    color: "#A09CB1",
+    color: "#17c05b",
     textDecorationLine: "line-through",
+    fontWeight: "bold",
+  },
+  footerComponent: {
+    height: 16,
   },
 });

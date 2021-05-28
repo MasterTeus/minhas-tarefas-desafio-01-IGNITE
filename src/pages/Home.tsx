@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 
 import { Header } from "../components/Header";
 import { MyTasksList } from "../components/MyTasksList";
@@ -15,32 +15,41 @@ export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   function handleAddTask(newTaskTitle: string) {
-    //TODO - add new task if it's not empty
+    if (!newTaskTitle) {
+      console.log(newTaskTitle.length);
+      return null;
+    }
+    var myTasks = tasks.filter((task) => task.title === newTaskTitle)[0];
 
-    var taskString = JSON.stringify(tasks);
-    var regex = new RegExp(newTaskTitle);
-
-    var taskExist = regex.test(taskString);
-
-    if (!taskExist) {
+    if (!myTasks) {
       var newTask = {
         id: new Date().getTime(),
         title: newTaskTitle,
         done: false,
       };
 
-      setTasks((oldState) => [...oldState, newTask]);
+      setTasks((oldState) => [newTask, ...oldState]);
     } else {
-      console.log("Essa tarefa ja foi inserida");
+      alert("Essa tarefa ja foi inserida");
     }
   }
 
   function handleMarkTaskAsDone(id: number) {
-    //TODO - mark task as done if exists
+    const filterArr = tasks.filter((task) => task.id === id)[0];
+
+    filterArr.done = !filterArr.done;
+
+    const removeArrayFiltered = tasks.filter((task) => task.id !== id);
+
+    setTasks((oldState) => [...removeArrayFiltered, filterArr]);
   }
 
   function handleRemoveTask(id: number) {
-    //TODO - remove task from state
+    const removeTask = tasks.filter((task) => task.id !== id);
+
+    setTasks(removeTask);
+
+    console.log(removeTask);
   }
 
   return (
@@ -63,5 +72,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#191920",
     flex: 1,
   },
-  
 });
